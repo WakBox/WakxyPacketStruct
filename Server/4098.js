@@ -39,7 +39,7 @@ function ReadPacket()
 	packet.ReadByte("hairColorFactor");
 	packet.ReadByte("clothIndex");
 	packet.ReadByte("faceIndex");
-	packet.ReadShort("Title");
+	packet.ReadShort("currentTitle");
 
 	// SHORTCUT_INVENTORIES
 	var aInv = packet.ReadShort("shortcutInventories size");
@@ -106,6 +106,91 @@ function ReadPacket()
 			packet.ReadInt("[" + j + "] skillId");
 	}
 
+	packet.ReadByte("needSpellRestat");
+
+	// INVENTORIES
+
+	// questInventory
+	for (var i = 0; i < packet.ReadShort("questInventory size"); ++i)
+	{
+		packet.ReadInt("refId");
+		packet.ReadShort("quantity");
+	}
+
+	// temporaryInventory
+	for (var i = 0; i < packet.ReadShort("temporaryInventory size ?"); ++i)
+	{
+		packet.Log("========= Equipment " + i + " =========");
+		packet.ReadShort("Position");
+		packet.ReadLong("uid");
+		packet.ReadInt("refid");
+		packet.ReadShort("quantity");
+		
+		if (packet.ReadByte("hasTimestamp") == 1)
+			packet.ReadLong("timestampValue");
+
+		if (packet.ReadByte("haspet") == 1)
+		{
+			packet.ReadInt("definitionId");
+			packet.ReadBigString("name");
+			packet.ReadInt("colorItemRefId");
+			packet.ReadInt("equippedRefItemId");
+			packet.ReadInt("health");
+			packet.ReadInt("xp");
+			packet.ReadByte("fightCounter");
+			packet.ReadLong("fightCounterStartDate");
+			packet.ReadLong("lastMealDate");
+			packet.ReadLong("lastHungryDate");
+			packet.ReadInt("sleepRefItemId");
+			packet.ReadLong("sleepDate");
+		}
+	
+		if (packet.ReadByte("hasxp") == 1)
+		{
+			packet.ReadInt("definitionId");
+			packet.ReadLong("xp");
+		}
+
+		if (packet.ReadByte("hasgems"))
+		{
+			for (var j = 0; j < packet.ReadShort("Gems size"); ++j)
+			{
+				packet.ReadByte("position");
+				packet.ReadInt("referenceId");
+			}
+		}
+
+		if (packet.ReadByte("hasRentInfo") == 1)
+		{
+			packet.ReadInt("type");
+			packet.ReadLong("duration");
+			packet.ReadLong("count");
+		}
+
+		if (packet.ReadByte("hasCompanionInfo") == 1)
+		{
+			packet.ReadLong("xp");
+		}
+
+		if (packet.ReadByte("hasBind") == 1)
+		{
+			packet.ReadByte("type");
+			packet.ReadLong("data");
+		}
+	}
+
+	// cosmeticsInventory
+	for (var i = 0; i < packet.ReadShort("cosmeticsInventory items size"); ++i)
+	{
+		packet.ReadInt("refId");
+	}
+	
+	// petCosmeticsInventory
+	for (var i = 0; i < packet.ReadShort("petCosmeticsInventory items size"); ++i)
+	{
+		packet.ReadInt("refId");
+	}
+
 	// EQUIPMENT_INVENTORY
 	var equipSize = packet.ReadShort("equipment Size");
 	for (var i = 0; i < equipSize; ++i)
@@ -161,71 +246,13 @@ function ReadPacket()
 		{
 			packet.ReadLong("xp");
 		}
+
+		if (packet.ReadByte("hasBind") == 1)
+		{
+			packet.ReadByte("type");
+			packet.ReadLong("data");
+		}
 	}
-
-	// INVENTORIES
-	for (var i = 0; i < packet.ReadShort("items size"); ++i)
-	{
-		packet.ReadInt("refId");
-		packet.ReadShort("quantity");
-	}
-
-	for (var i = 0; i < packet.ReadShort("items size ?"); ++i)
-	{
-		packet.Log("========= Equipment " + i + " =========");
-		packet.ReadShort("Position");
-		packet.ReadLong("uid");
-		packet.ReadInt("refid");
-		packet.ReadShort("quantity");
-		
-		if (packet.ReadByte("hasTimestamp") == 1)
-			packet.ReadLong("timestampValue");
-
-		if (packet.ReadByte("haspet") == 1)
-		{
-			packet.ReadInt("definitionId");
-			packet.ReadBigString("name");
-			packet.ReadInt("colorItemRefId");
-			packet.ReadInt("equippedRefItemId");
-			packet.ReadInt("health");
-			packet.ReadInt("xp");
-			packet.ReadByte("fightCounter");
-			packet.ReadLong("fightCounterStartDate");
-			packet.ReadLong("lastMealDate");
-			packet.ReadLong("lastHungryDate");
-			packet.ReadInt("sleepRefItemId");
-			packet.ReadLong("sleepDate");
-		}
-	
-		if (packet.ReadByte("hasxp") == 1)
-		{
-			packet.ReadInt("definitionId");
-			packet.ReadLong("xp");
-		}
-
-		if (packet.ReadByte("hasgems"))
-		{
-			for (var j = 0; j < packet.ReadShort("Gems size"); ++j)
-			{
-				packet.ReadByte("position");
-				packet.ReadInt("referenceId");
-			}
-		}
-
-		if (packet.ReadByte("hasRentInfo") == 1)
-		{
-			packet.ReadInt("type");
-			packet.ReadLong("duration");
-			packet.ReadLong("count");
-		}
-
-		if (packet.ReadByte("hasCompanionInfo") == 1)
-		{
-			packet.ReadLong("xp");
-		}		
-	}
-	
-packet.Log("=======================================================");
 
 	// BAGS
 	var bagCount = packet.ReadShort("Bags count");
@@ -290,6 +317,12 @@ packet.Log("=======================================================");
 		if (packet.ReadByte("hasCompanionInfo") == 1)
 		{
 			packet.ReadLong("xp");
+		}
+
+		if (packet.ReadByte("hasBind") == 1)
+		{
+			packet.ReadByte("type");
+			packet.ReadLong("data");
 		}
 		}
 	}
@@ -455,11 +488,14 @@ packet.Log("=======================================================");
 				packet.ReadLong("xp");
 			}
 
-			if (packet.ReadByte("specificData") == 1)
+			if (packet.ReadByte("hasBind") == 1)
 			{
-				packet.ReadByte("blockId");
-				// see Em.java switch
+				packet.ReadByte("type");
+				packet.ReadLong("data");
 			}
+
+			packet.ReadByte("SpecificData");
+			packet.ReadByte("SpecificData part Id");
 		}
 
 		if (packet.ReadByte("hasRoomSpecificData") == 0)
@@ -530,19 +566,19 @@ packet.Log("=======================================================");
 			for (var n = 0; n < eaGr; ++n)
 			{
         /* TODO
-                int actionGroupId
-                short actionGroup size
-                {
-                        int actionUid
-                        action
-                        {
-                                byte hasSpawnedCharacter
-                                {
-                                        short serializedCharacterLength
-                                        byte[serializedCharacterLength] serializedCharacter
-                                }
-                        }
-                }    
+                                                int actionGroupId
+                                                short actionGroup size
+                                                {
+                                                        short actions size
+                                                        {
+                                                                int actionUid
+                                                                byte hasSpawnedCharacter
+                                                                {
+                                                                        short serializedCharacterLength
+                                                                        byte[serializedCharacterLength] serializedCharacter
+                                                                }
+                                                        }
+                                                }   
                 */      		
 			}
 
@@ -642,7 +678,7 @@ packet.Log("=======================================================");
 	packet.ReadByte("dndstate as bool");
 
 	// PET
-	if (packet.ReadByte("HasPet") == 1)
+	if (packet.ReadByte("hasPet") == 1)
 	{
 		packet.ReadInt("definitionId");
 		packet.ReadInt("colorRefItemId");
@@ -663,7 +699,9 @@ packet.Log("=======================================================");
 		packet.ReadInt("adminRight");
 
 	packet.ReadInt("subscriptionLevel");
+	packet.ReadInt("forcedSubscriptionLevel");
 	packet.ReadInt("antiAddictionLevel");
+	packet.ReadLong("sessionStartTime");
 
 	var adRi = packet.ReadShort("AdditionalRights size");
 	for (var i = 0; i < adRi; ++i)
@@ -673,10 +711,11 @@ packet.Log("=======================================================");
 	var lockSize = packet.ReadShort("LOCK_TO_CLIENT size");
 	for (var i = 0; i < lockSize; ++i)
 	{
-		packet.ReadInt("m_lockId");
-		packet.ReadLong("m_lockDate");
-		packet.ReadInt("m_currentLockValue");
-		packet.ReadLong("m_currentLockValueLastChange");
+		packet.ReadInt("lockId");
+		packet.ReadLong("lockDate");
+		packet.ReadLong("unlockDate");
+		packet.ReadInt("currentLockValue");
+		packet.ReadLong("currentLockValueLastChange");
 	}
 
 	// DIMENSIONAL_BAG_VIEWS_INVENTORY
@@ -703,6 +742,20 @@ packet.Log("=======================================================");
 		packet.ReadLong("lastCOnnectionDate");
 		packet.ReadLong("currentUsedQuota");
 	}
+
+	// WORLD_PROPERTIES
+	if (packet.ReadByte("hasProperties") == 1)
+	{
+		var propSize = packet.ReadShort("Properties size");
+		for (var i = 0; i < propSize; ++i)
+		{
+			packet.ReadByte("id");
+			packet.ReadByte("count");
+		}
+	}
+
+	// VISIBILITY
+	packet.ReadByte("Visible");
 
 	packet.Log(packet.Length());
 }

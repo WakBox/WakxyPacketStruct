@@ -7,17 +7,22 @@ function ReadPacket()
         packet.Log("================================");
         
         packet.ReadShort("data size");
-        packet.ReadByte("block id");
+        packet.ReadByte("part id");
 
+		// ID
 		packet.ReadLong("character id");
 		
+		// IDENTITY
 		packet.ReadByte("typeId");
 		packet.ReadLong("OwnerId");
 
+		// NAME
         packet.ReadBigString("Name");
 
+		// BREED
         packet.ReadShort("Breed");
 
+		// APPEARANCE
 		packet.ReadByte("gender");
 		packet.ReadByte("skinColorIndex");
 		packet.ReadByte("hairColorIndex");
@@ -28,18 +33,26 @@ function ReadPacket()
 		packet.ReadByte("faceIndex");
 		packet.ReadShort("currentTitle");
 
-		var vSize = packet.ReadShort("views size");
-		for (var j = 0; j < vSize; ++j)
-			packet.ReadInt("viewId");
+		// EQUIPMENT_APPEARANCE
+		var equipSize = packet.ReadByte("equipSize size");
+		for (var j = 0; j < equipSize; ++j)
+		{
+			packet.ReadByte("position");
+			packet.ReadInt("referenceId");
+		}
 
+		// CREATION_DATA
         if (packet.ReadByte("CreationData?") == 1)
 		{
 			packet.ReadByte("isnewCharacter");
 			packet.ReadByte("needsRecustom");
+			packet.ReadShort("recustomValue");
 		}
 
+		// XP
 		packet.ReadLong("XP");
-        
+
+		// CHARACTER_LIST_NATION_ID
 		packet.ReadInt("Nation");
 	}
 
