@@ -5,6 +5,7 @@ function ReadPacket()
 	{
 		packet.ReadLong("instance elementId");
 		packet.ReadShort("buffer size");
+
 		var count = packet.ReadByte("block count");
 		for (var j = 0; j < count; ++j)
 		{
@@ -36,6 +37,8 @@ packet.ReadByte(u);
 			}
 		}
 	} 
+
+	packet.Log(packet.Length());
 }
 
 ReadPacket();

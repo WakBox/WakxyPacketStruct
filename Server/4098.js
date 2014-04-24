@@ -687,7 +687,6 @@ function ReadPacket()
 		packet.ReadInt("health");
 	}
 
-// Wrong from here
 	// ACHIEVEMENTS
 	var dataLen = packet.ReadShort("serializedAchievementsContextLength");
 	for (var i = 0; i < dataLen; ++i)
