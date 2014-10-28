@@ -298,8 +298,10 @@ function ReadPacket()
 	// RUNNING_EFFECTS
 	if (packet.ReadByte("hasInFightData") == 1)
 	{
-		if (packet.ReadShort("data length") > 0)
-			packet.ReadByte("data");
+		// WRONG !?
+		var pktLength = packet.ReadShort("data length");
+		for (var m = 0; m < pktLength; ++m)
+			packet.ReadByte("data[" + m + "]");
 	}
 
 	if (packet.ReadByte("hasOutFightData") == 1)
@@ -363,6 +365,7 @@ function ReadPacket()
 	// XP
 			packet.ReadLong("XP");
 
+	// XP_CHARACTERISTICS
 			packet.ReadShort("freePoints");
 			var xpBSize = packet.ReadShort("xpBonusPoints");
 			for (var t = 0; t < xpBSize; ++t)

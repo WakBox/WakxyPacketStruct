@@ -1,7 +1,8 @@
 function ReadPacket()
 {
-	packet.ReadInt("??");
-	packet.ReadLong("??");
+	packet.Log("SetAchievementVariable");
+	packet.ReadInt("Variable");
+	packet.ReadLong("Value");
 }
 
 ReadPacket();
