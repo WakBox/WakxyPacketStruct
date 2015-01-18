@@ -3,7 +3,9 @@ function ReadPacket()
 	packet.ReadInt("unk");
 	packet.ReadInt("unk");
 	packet.ReadInt("unk");
-	packet.ReadLong("monsterId or characterId => then targetId ?");
+	packet.ReadLong("characterId");
+	packet.ReadInt("unk");
+	packet.ReadInt("unk");
 }
 
 ReadPacket();

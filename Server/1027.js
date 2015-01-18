@@ -1,0 +1,6 @@
+function ReadPacket()
+{
+	// Code
+}
+
+ReadPacket();
