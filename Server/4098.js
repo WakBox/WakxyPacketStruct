@@ -1,11 +1,13 @@
 function ReadPacket()
 {
-	var longCount = packet.ReadShort("Long count ?");
+	packet.Log("CharacterInformationMessage");
+
+	var longCount = packet.ReadShort("m_reservedIds size");
 	for (var i=0; i<longCount; i++)
-		packet.ReadLong(i);
+		packet.ReadLong("m_reservedIds[" + i + "]");
 
 	packet.ReadInt("buffer size");
-	packet.ReadByte("Char part Id");
+	packet.ReadByte("Char serialization part Id");
 
 	// ID
 	packet.ReadLong("Char Id");
@@ -29,6 +31,14 @@ function ReadPacket()
 	packet.ReadShort("Z");
 	packet.ReadShort("InstanceId");
 	packet.ReadByte("Direction");
+	var hasDimBagPosition = packet.ReadByte("dimBagPosition");
+	if (hasDimBagPosition)
+	{
+		packet.ReadInt("DimBag X");
+		packet.ReadInt("DimBag Y");
+		packet.ReadShort("DimBag Z");
+		packet.ReadShort("DimBag InstanceId");
+	}
 
 	// APPEARANCE
 	packet.ReadByte("Gender");
@@ -72,19 +82,24 @@ function ReadPacket()
 		packet.ReadByte("LandmarkId");
 
 	// DISCOVERED_ITEMS
-	for (var i = 0; i < packet.ReadShort("ZaapsCount"); ++i)
+	var count = packet.ReadShort("ZaapsCount");
+	for (var i = 0; i < count; ++i)
 		packet.ReadInt("Zaaps + " + i);
 
-	for (var i = 0; i < packet.ReadShort("dragosCount"); ++i)
+	count =packet.ReadShort("dragosCount");
+	for (var i = 0; i < count; ++i)
 		packet.ReadInt("dragos + " + i);
 
-	for (var i = 0; i < packet.ReadShort("boatscount"); ++i)
+	count = packet.ReadShort("boatscount");
+	for (var i = 0; i < count; ++i)
 		packet.ReadInt("boat + " + i);
 
-	for (var i = 0; i < packet.ReadShort("cannonCount"); ++i)
+	count = packet.ReadShort("cannonCount");
+	for (var i = 0; i < count; ++i)
 		packet.ReadInt("cannon + " + i);
 
-	for (var i = 0; i < packet.ReadShort("phoenixcount"); ++i)
+	count = packet.ReadShort("phoenixcount");
+	for (var i = 0; i < count; ++i)
 		packet.ReadInt("phoenix + " + i);
 
 	packet.ReadInt("selectedPhoenix");
@@ -107,6 +122,8 @@ function ReadPacket()
 	}
 
 	packet.ReadByte("needSpellRestat");
+
+	// OK UNTIL HERE
 
 	// INVENTORIES
 
@@ -685,12 +702,53 @@ function ReadPacket()
 		packet.ReadInt("equippedRefItemId");
 		packet.ReadInt("sleepRefItemId");
 		packet.ReadInt("health");
+		packet.ReadInt("reskinRefItemId");
+	}
+
+	if (packet.ReadByte("hasMount") == 1)
+	{
+		packet.ReadInt("definitionId");
+		packet.ReadInt("colorRefItemId");
+		packet.ReadInt("equippedRefItemId");
+		packet.ReadInt("sleepRefItemId");
+		packet.ReadInt("health");
+		packet.ReadInt("reskinRefItemId");
 	}
 
 	// ACHIEVEMENTS
 	var dataLen = packet.ReadShort("serializedAchievementsContextLength");
-	for (var i = 0; i < dataLen; ++i)
-		packet.ReadByte();
+	packet.ReadInt("version");
+	var history = packet.ReadByte("history size");
+	for (var i = 0; i < history; ++i)
+	{
+		packet.ReadInt("achievementId");
+		packet.ReadLong("unlockTime");
+	}
+
+	var nbVariables = packet.ReadInt("nbVariables");
+	for (var i = 0; i < nbVariables; ++i)
+	{
+		packet.ReadInt("value id");
+		packet.ReadLong("value");
+	}
+
+	var nbAchievements = packet.ReadInt("nbAchievements");
+	for (var i = 0; i < nbAchievements; ++i)
+	{
+		packet.ReadInt("achievement id");
+		packet.ReadBool("active");
+		packet.ReadBool("complete");
+		packet.ReadLong("lastCompleted");
+		packet.ReadLong("startTime");
+	}
+
+	var nbObjectives = packet.ReadInt("nbObjectives");
+	for (var i = 0; i < nbObjectives; ++i)
+		packet.ReadInt("objective id");
+
+	var numFollowed = packet.ReadByte("numFollowed");
+	for (var i = 0; i < numFollowed; ++i)
+		packet.ReadInt("followedAchievement id");
 
 	// ACCOUNT_INFORMATION
 	var adminRights = packet.ReadShort("adminRights size");
@@ -705,6 +763,9 @@ function ReadPacket()
 	var adRi = packet.ReadShort("AdditionalRights size");
 	for (var i = 0; i < adRi; ++i)
 		packet.ReadInt("additionalRight");
+
+	packet.ReadByte("additionalSlots");
+	packet.ReadByte("vaultUpgrades");
 
 	// LOCK_TO_CLIENT
 	var lockSize = packet.ReadShort("LOCK_TO_CLIENT size");
@@ -755,6 +816,29 @@ function ReadPacket()
 
 	// VISIBILITY
 	packet.ReadByte("Visible");
+
+	// OCCUPATION
+	if (packet.ReadByte("hasOccupation") == 1)
+	{
+	}
+
+	// APTITUDE_BONUS_INVENTORY
+	if (packet.ReadByte("hasOptional") == 1)
+	{
+		var bsize = packet.ReadShort("bonus size");
+		for (var i = 0; i < bsize; ++i)
+		{
+			packet.ReadInt("bonusId");
+			packet.ReadShort("level");
+		}
+
+		bsize = packet.ReadShort("availablePoints size");
+		for (var i = 0; i < bsize; ++i)
+		{
+			packet.ReadInt("categoryId");
+			packet.ReadShort("availablePoints");
+		}		
+	}	
 
 	packet.Log(packet.Length());
 }

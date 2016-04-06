@@ -1,6 +1,7 @@
 function ReadPacket()
 {
-	packet.ReadByte("??");
+	packet.Log("IgnoreListMessage");
+	packet.ReadByte("List size");
 }
 
 ReadPacket();

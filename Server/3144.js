@@ -1,6 +1,7 @@
 function ReadPacket()
 {
-packet.ReadByte("?");
+	packet.Log("FriendListMessage");
+	packet.ReadByte("List size");
 }
 
 ReadPacket();

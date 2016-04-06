@@ -1,6 +1,6 @@
 function ReadPacket()
 {
-	packet.ReadShort("?");
+	packet.ReadShort("m_freeCompanionBreedId");
 }
 
 ReadPacket();

@@ -1,5 +1,5 @@
 function ReadPacket()
 {
-	packet.ReadByte("join world result");
+	packet.ReadByte("WorldSelectionResult errorCode");
 }
 ReadPacket();

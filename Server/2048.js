@@ -1,28 +1,28 @@
 function ReadPacket()
 {
-	var count = packet.ReadByte("CharactersCount");
-	for(var i = 0; i < count; i++){
+	var numCharacters = packet.ReadByte("numCharacters");
+	for(var i = 0; i < numCharacters; i++){
         packet.Log("================================");
         packet.Log("=>                 Parse character [" + i + "]");
         packet.Log("================================");
         
-        packet.ReadShort("data size");
-        packet.ReadByte("part id");
+        packet.ReadShort("serializedCharacterSize");
+        packet.ReadByte("serializationTypeNumber");
 
-		// ID
+		// ID - CharacterSerializedId
 		packet.ReadLong("character id");
 		
-		// IDENTITY
-		packet.ReadByte("typeId");
+		// IDENTITY - CharacterSerializedIdentity
+		packet.ReadByte("typeId (non-player = 1, player = 0)");
 		packet.ReadLong("OwnerId");
 
-		// NAME
+		// NAME - CharacterSerializedName
         packet.ReadBigString("Name");
 
-		// BREED
+		// BREED - CharacterSerializedBreed
         packet.ReadShort("Breed");
 
-		// APPEARANCE
+		// APPEARANCE - CharacterSerializedAppearance
 		packet.ReadByte("gender");
 		packet.ReadByte("skinColorIndex");
 		packet.ReadByte("hairColorIndex");
@@ -33,26 +33,26 @@ function ReadPacket()
 		packet.ReadByte("faceIndex");
 		packet.ReadShort("currentTitle");
 
-		// EQUIPMENT_APPEARANCE
-		var equipSize = packet.ReadByte("equipSize size");
+		// EQUIPMENT_APPEARANCE - CharacterSerializedEquipmentAppearance
+		var equipSize = packet.ReadByte("EquipmentAppearance size");
 		for (var j = 0; j < equipSize; ++j)
 		{
 			packet.ReadByte("position");
 			packet.ReadInt("referenceId");
 		}
 
-		// CREATION_DATA
-        if (packet.ReadByte("CreationData?") == 1)
+		// CREATION_DATA - CharacterSerializedCreationData
+        if (packet.ReadByte("hasCreationData?") == 1)
 		{
-			packet.ReadByte("isnewCharacter");
+			packet.ReadByte("isNewCharacter");
 			packet.ReadByte("needsRecustom");
 			packet.ReadShort("recustomValue");
 		}
 
-		// XP
+		// XP - CharacterSerializedXp
 		packet.ReadLong("XP");
 
-		// CHARACTER_LIST_NATION_ID
+		// CHARACTER_LIST_NATION_ID - CharacterSerializedNationId
 		packet.ReadInt("Nation");
 	}
 

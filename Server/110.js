@@ -1,9 +1,10 @@
 function ReadPacket()
 {
-	packet.ReadByte("Unk1");
-	packet.ReadByte("Unk2");
-	packet.ReadByte("Unk3");
-	packet.ReadByte("Unk4");
+	packet.Log("Client IP address");
+	packet.ReadUByte("Unk1");
+	packet.ReadUByte("Unk2");
+	packet.ReadUByte("Unk3");
+	packet.ReadUByte("Unk4");
 }
 
 ReadPacket();

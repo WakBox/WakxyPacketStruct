@@ -14,6 +14,7 @@ function ReadPacket()
 	packet.ReadShort("z");
 	packet.ReadShort("InstanceId");
 	packet.ReadByte("direction");
+	packet.ReadByte("dimBagPosition");
 
 	// Next
 	var pSize = packet.ReadShort("Size");

@@ -34,7 +34,7 @@ function ReadPacket()
 		packet.ReadInt("m_antiAddictionLevel");
 		packet.ReadLong("m_accountExpirationDate");
 
-		for (var i = 0; i <= 75; ++i)
+		for (var i = 0; i < 95; ++i)
 			packet.ReadInt("m_adminRights[" + i + "]");
 
 		packet.ReadString("m_accountNickName");

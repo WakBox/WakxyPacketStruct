@@ -1,6 +1,7 @@
 function ReadPacket()
 {
-	packet.ReadLong("SystemTime");
+	packet.Log("ClientCalendarSynchronizationMessage");
+	packet.ReadLong("m_synchronizationTime");
 }
 
 ReadPacket();
