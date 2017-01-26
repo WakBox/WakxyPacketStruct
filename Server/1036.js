@@ -36,8 +36,6 @@ function ReadPacket()
 			packet.ReadString(packet.ReadInt(), "Value [ " + j + "]");
 		}
 
-		packet.ReadInt("PlayerCount");
-		packet.ReadInt("PlayerLimit");
 		packet.ReadBool("IsLocked");
 	}
 }

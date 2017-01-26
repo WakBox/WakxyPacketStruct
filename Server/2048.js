@@ -22,6 +22,9 @@ function ReadPacket()
 		// BREED - CharacterSerializedBreed
         packet.ReadShort("Breed");
 
+		// ACTIVE_EQUIPMENT_SHEET
+		packet.ReadByte("ActiveEquipmentSheet");
+
 		// APPEARANCE - CharacterSerializedAppearance
 		packet.ReadByte("gender");
 		packet.ReadByte("skinColorIndex");
@@ -39,6 +42,7 @@ function ReadPacket()
 		{
 			packet.ReadByte("position");
 			packet.ReadInt("referenceId");
+			packet.ReadInt("skinId");
 		}
 
 		// CREATION_DATA - CharacterSerializedCreationData
@@ -47,6 +51,7 @@ function ReadPacket()
 			packet.ReadByte("isNewCharacter");
 			packet.ReadByte("needsRecustom");
 			packet.ReadShort("recustomValue");
+			packet.ReadByte("needInitialXp");
 		}
 
 		// XP - CharacterSerializedXp
@@ -54,6 +59,11 @@ function ReadPacket()
 
 		// CHARACTER_LIST_NATION_ID - CharacterSerializedNationId
 		packet.ReadInt("Nation");
+
+		packet.ReadLong("Guild Id");
+		packet.ReadLong("Guild Blazon");
+
+		packet.ReadShort("InstanceId");
 	}
 
 	packet.Log(packet.Length());

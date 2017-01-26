@@ -58,7 +58,7 @@ function ReadPacket()
 	{
 		packet.Log("========= Inv " + i + " =========");
 		packet.ReadByte("Type");
-		var invSize = packet.ReadShort("Size");
+		var invSize = packet.ReadShort("Content");
 
 		if (invSize > 0)
 		{
@@ -105,8 +105,6 @@ function ReadPacket()
 	packet.ReadInt("selectedPhoenix");
 
 	// SPELL_INVENTORY
-	packet.ReadShort("spellInventoryVersion");
-	packet.ReadInt("lockedSpellId");
 	var spellSize = packet.ReadShort("Size");
 
 	for (var i = 0; i < spellSize; ++i)
@@ -116,16 +114,18 @@ function ReadPacket()
 		packet.ReadLong("Uid");
 		packet.ReadInt("SpellId");
 		packet.ReadShort("Level");
-		packet.ReadLong("Xp");
-		for (var j = 0; j < packet.ReadByte("SkillSize"); ++j)
+
+		var skillSize = packet.ReadByte("SkillSize");
+		for (var j = 0; j < skillSize; ++j)
 			packet.ReadInt("[" + j + "] skillId");
 	}
 
 	packet.ReadByte("needSpellRestat");
+	packet.ReadByte("needSpellAutoRestat");
 
 	// OK UNTIL HERE
 
-	// INVENTORIES
+	// INVENTORIES - TODO FIX ME
 
 	// questInventory
 	for (var i = 0; i < packet.ReadShort("questInventory size"); ++i)
@@ -208,70 +208,9 @@ function ReadPacket()
 		packet.ReadInt("refId");
 	}
 
-	// EQUIPMENT_INVENTORY
-	var equipSize = packet.ReadShort("equipment Size");
-	for (var i = 0; i < equipSize; ++i)
-	{
-		packet.Log("========= Equipment " + i + " =========");
-		packet.ReadShort("Position");
-		packet.ReadLong("uid");
-		packet.ReadInt("refid");
-		packet.ReadShort("quantity");
-		
-		if (packet.ReadByte("hasTimestamp") == 1)
-			packet.ReadLong("timestampValue");
+packet.ReadLong("Skip some");
 
-		if (packet.ReadByte("haspet") == 1)
-		{
-			packet.ReadInt("definitionId");
-			packet.ReadBigString("name");
-			packet.ReadInt("colorItemRefId");
-			packet.ReadInt("equippedRefItemId");
-			packet.ReadInt("health");
-			packet.ReadInt("xp");
-			packet.ReadByte("fightCounter");
-			packet.ReadLong("fightCounterStartDate");
-			packet.ReadLong("lastMealDate");
-			packet.ReadLong("lastHungryDate");
-			packet.ReadInt("sleepRefItemId");
-			packet.ReadLong("sleepDate");
-		}
-	
-		if (packet.ReadByte("hasxp") == 1)
-		{
-			packet.ReadInt("definitionId");
-			packet.ReadLong("xp");
-		}
-
-		if (packet.ReadByte("hasgems"))
-		{
-			for (var j = 0; j < packet.ReadShort("Gems size"); ++j)
-			{
-				packet.ReadByte("position");
-				packet.ReadInt("referenceId");
-			}
-		}
-
-		if (packet.ReadByte("hasRentInfo") == 1)
-		{
-			packet.ReadInt("type");
-			packet.ReadLong("duration");
-			packet.ReadLong("count");
-		}
-
-		if (packet.ReadByte("hasCompanionInfo") == 1)
-		{
-			packet.ReadLong("xp");
-		}
-
-		if (packet.ReadByte("hasBind") == 1)
-		{
-			packet.ReadByte("type");
-			packet.ReadLong("data");
-		}
-	}
-
-	// BAGS
+	// BAGS - TODO FIX ME
 	var bagCount = packet.ReadShort("Bags count");
 
 	for (var i = 0; i < bagCount; ++i)
@@ -281,17 +220,15 @@ function ReadPacket()
 		packet.ReadInt("refid");
 		packet.ReadByte("position");
 		packet.ReadShort("maxsize");
+
 		var itemCount = packet.ReadShort("item count");
 
 		for (var j = 0; j < itemCount; ++j)
 		{
 			packet.ReadShort("Position");
+
 			packet.ReadLong("uid");
 			packet.ReadInt("refid");
-			packet.ReadShort("quantity");
-		
-			if (packet.ReadByte("hasTimestamp") == 1)
-				packet.ReadLong("timestampValue");
 
 			if (packet.ReadByte("haspet") == 1)
 			{
@@ -309,42 +246,56 @@ function ReadPacket()
 			packet.ReadLong("sleepDate");
 			}
 	
-		if (packet.ReadByte("hasxp") == 1)
-		{
-			packet.ReadInt("definitionId");
-			packet.ReadLong("xp");
-		}
-
-		if (packet.ReadByte("hasgems"))
-		{
-			for (var j = 0; j < packet.ReadShort("Gems size"); ++j)
+			if (packet.ReadByte("hasxp") == 1)
 			{
-				packet.ReadByte("position");
-				packet.ReadInt("referenceId");
+				packet.ReadInt("definitionId");
+				packet.ReadLong("xp");
 			}
-		}
 
-		if (packet.ReadByte("hasRentInfo") == 1)
-		{
-			packet.ReadInt("type");
-			packet.ReadLong("duration");
-			packet.ReadLong("count");
-		}
+			if (packet.ReadByte("hasgems"))
+			{
+				for (var j = 0; j < packet.ReadShort("Gems size"); ++j)
+				{
+					packet.ReadByte("position");
+					packet.ReadInt("referenceId");
+				}
+			}
 
-		if (packet.ReadByte("hasCompanionInfo") == 1)
-		{
-			packet.ReadLong("xp");
-		}
+			if (packet.ReadByte("hasRentInfo") == 1)
+			{
+				packet.ReadInt("type");
+				packet.ReadLong("duration");
+				packet.ReadLong("count");
+			}
 
-		if (packet.ReadByte("hasBind") == 1)
-		{
-			packet.ReadByte("type");
-			packet.ReadLong("data");
-		}
+			if (packet.ReadByte("hasCompanionInfo") == 1)
+			{
+				packet.ReadLong("xp");
+			}
+
+			if (packet.ReadByte("hasBind") == 1)
+			{
+				packet.ReadByte("type");
+				packet.ReadLong("data");
+			}
+
+			if (packet.ReadByte("elements") == 1)
+			{
+				// TODO
+			}
+
+			if (packet.ReadByte("mimiSymbic") == 1)
+			{
+				// TODO
+			}
 		}
 	}
 
-	// BREED_SPECIFIC
+        // PROTO_TEMPORARY_INVENTORY - TODO FIX ME
+        packet.ReadShort("PROTO_TEMPORARY_INVENTORY Size to read");
+
+
+	// BREED_SPECIFIC - TODO FIX ME
 	if (packet.ReadByte("hasOsaSpecific") == 1)
 	{
 		for (var i = 0; i < packet.ReadByte("capturedCreatures size"); ++i)
@@ -358,8 +309,8 @@ function ReadPacket()
 		packet.ReadByte("currentCreatureIndex");
 	}
 
-	// SKILL_INVENTORY
-	var skillCount = packet.ReadShort("count");
+	// SKILL_INVENTORY - Struct OK
+	var skillCount = packet.ReadShort("SkillInventory");
 	for (var i = 0; i < skillCount; ++i)
 	{
 		packet.Log("========= Skill " + i + " =========");
@@ -393,27 +344,6 @@ function ReadPacket()
 			packet.ReadInt("recipeId");
 	}
 
-	// APTITUDE_INVENTORY
-	var aPC = packet.ReadShort("aptitudeInventory size");
-	for (var i = 0; i < aPC; ++i)
-	{
-		packet.Log("========= Aptitude " + i + " =========");
-		packet.ReadShort("referenceId");
-		packet.ReadShort("level");
-		packet.ReadShort("wonLevel");
-	}
-
-	var aPC2 = packet.ReadShort("availablePointsArray size");
-	for (var i = 0; i < aPC2; ++i)
-	{
-		packet.Log("========= Aptitude2 " + i + " =========");
-		packet.ReadByte("aptitudeType");
-		packet.ReadInt("availablePoints");
-		packet.ReadInt("wonPoints");
-	}
-
-	packet.ReadShort("version");
-
 	// RUNNING_EFFECTS
 	if (packet.ReadByte("hasInFightData") == 1)
 	{
@@ -430,6 +360,7 @@ function ReadPacket()
 			packet.ReadShort("stateBaseId");
 			packet.ReadShort("level");
 			packet.ReadInt("remainingDurationInMs");
+			packet.ReadLong("startDate");
 		}
 	}
 
@@ -541,9 +472,9 @@ function ReadPacket()
 	}
 
 	var IESize = packet.ReadShort("individualEntriesSize");
-	for (var i = 0; i < IESize; ++i)
+	for (var x = 0; x < IESize; ++x)
 	{
-		packet.Log("========= individualEntriesSize " + i + " =========");
+		packet.Log("========= individualEntriesSize " + x + " =========");
 		packet.ReadLong("userId");
 		packet.ReadBigString("username");
 		packet.ReadByte("rights");
@@ -717,6 +648,7 @@ function ReadPacket()
 
 	// ACHIEVEMENTS
 	var dataLen = packet.ReadShort("serializedAchievementsContextLength");
+
 	packet.ReadInt("version");
 	var history = packet.ReadByte("history size");
 	for (var i = 0; i < history; ++i)
@@ -756,6 +688,8 @@ function ReadPacket()
 		packet.ReadInt("adminRight");
 
 	packet.ReadInt("subscriptionLevel");
+	packet.ReadInt("heroesSubscriptionLevel");
+	packet.ReadInt("m_freeHeroesSubscriptionLevel");
 	packet.ReadInt("forcedSubscriptionLevel");
 	packet.ReadInt("antiAddictionLevel");
 	packet.ReadLong("sessionStartTime");
@@ -765,7 +699,14 @@ function ReadPacket()
 		packet.ReadInt("additionalRight");
 
 	packet.ReadByte("additionalSlots");
-	packet.ReadByte("vaultUpgrades");
+
+	packet.ReadByte("accountSecurityType");
+	var accountDataSize = packet.ReadShort("accountData");
+	for (var adSize = 0; adSize < accountDataSize; ++adSize)
+	{
+		packet.ReadByte("id");
+		packet.ReadLong("value");
+	}
 
 	// LOCK_TO_CLIENT
 	var lockSize = packet.ReadShort("LOCK_TO_CLIENT size");
@@ -775,8 +716,9 @@ function ReadPacket()
 		packet.ReadLong("lockDate");
 		packet.ReadLong("unlockDate");
 		packet.ReadInt("currentLockValue");
-		packet.ReadLong("currentLockValueLastChange");
+		packet.ReadLong("currentLockValueLastModification");
 	}
+
 
 	// DIMENSIONAL_BAG_VIEWS_INVENTORY
 	var viewSize = packet.ReadShort("views size");
@@ -822,23 +764,18 @@ function ReadPacket()
 	{
 	}
 
-	// APTITUDE_BONUS_INVENTORY
-	if (packet.ReadByte("hasOptional") == 1)
+    // SPELL_DECK
+	var spellDeckSize = packet.ReadShort("spellDeckSize size");
+	for (var i = 0; i < spellDeckSize; ++i)
 	{
-		var bsize = packet.ReadShort("bonus size");
-		for (var i = 0; i < bsize; ++i)
-		{
-			packet.ReadInt("bonusId");
-			packet.ReadShort("level");
-		}
+		packet.ReadInt("index");
+	}
 
-		bsize = packet.ReadShort("availablePoints size");
-		for (var i = 0; i < bsize; ++i)
-		{
-			packet.ReadInt("categoryId");
-			packet.ReadShort("availablePoints");
-		}		
-	}	
+        // DUNGEON_PROGRESSION
+        // TODO
+
+	// Second part of packet
+	packet.ReadInt("secondPartSize");
 
 	packet.Log(packet.Length());
 }

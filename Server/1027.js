@@ -1,7 +1,6 @@
 function ReadPacket()
 {
 	packet.ReadByte("AuthResultCode");
-	packet.ReadBool("bool m_activateSteamLinkHint")
 
 	if (packet.ReadBool("bool hasAccountInformations"))
 	{
@@ -9,6 +8,7 @@ function ReadPacket()
 
 		if (packet.ReadBool("bool hasAdminInformation"))
 		{
+			packet.ReadInt("size");
 		}
 	}
 

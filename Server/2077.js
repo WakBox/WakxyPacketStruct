@@ -16,8 +16,10 @@ function ReadPacket()
 		packet.ReadInt("maxHp");
 
 		packet.ReadInt("serializationVersion");
+
+		packet.ReadShort("Size of ?");
 		// TODO!
-}
+	}
 
 	packet.Log(packet.Length());
 }

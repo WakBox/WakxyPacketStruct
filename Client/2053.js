@@ -1,6 +1,6 @@
 function ReadPacket()
 {
-packet.ReadLong("??");
+packet.ReadLong("m_characterId");
 packet.ReadByte("Sex");
 packet.ReadByte("SkinColor");
 packet.ReadByte("HairColor");
@@ -12,8 +12,7 @@ packet.ReadByte("Face")
 packet.ReadShort("Breed");
 var name = packet.ReadByte();
 packet.ReadString(name, "Name");
-
-packet.Log(packet.Length());
+packet.ReadBool("Unk");
 }
 
 ReadPacket();
