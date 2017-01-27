@@ -769,13 +769,35 @@ packet.ReadLong("Skip some");
 	for (var i = 0; i < spellDeckSize; ++i)
 	{
 		packet.ReadInt("index");
+
+		var activeSpells = packet.ReadShort("activeSpells size");
+		for (var j = 0; j < activeSpells; ++j)
+			packet.ReadInt("activeSpells");
+
+		var passiveSpells = packet.ReadShort("passiveSpells size");
+		for (var j= 0; j < passiveSpells; ++j)
+			packet.ReadInt("passiveSpells");
+
+		packet.ReadBigString("Name");
+		packet.ReadInt("Level");
 	}
 
-        // DUNGEON_PROGRESSION
-        // TODO
+	packet.ReadInt("size");
+
+    // DUNGEON_PROGRESSION
+    var dungeonSize = packet.ReadShort("Dungeon progress data size");
+	for (var z=0; z < dungeonSize; ++z)
+		packet.ReadByte();
 
 	// Second part of packet
-	packet.ReadInt("secondPartSize");
+	var protoBuildSize = packet.ReadInt("protoBuildSize");
+	for (var y = 0; y < protoBuildSize; ++y)
+		packet.ReadByte("protoBuild" + y);
+
+	// Third part of packet
+	var protoBuildSize2 = packet.ReadInt("protoBuildSize2");
+	for (var y = 0; y < protoBuildSize2; ++y)
+		packet.ReadByte("protoBuild2" + y);
 
 	packet.Log(packet.Length());
 }
