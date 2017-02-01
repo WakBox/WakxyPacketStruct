@@ -648,39 +648,41 @@ packet.ReadLong("Skip some");
 
 	// ACHIEVEMENTS
 	var dataLen = packet.ReadShort("serializedAchievementsContextLength");
-
-	packet.ReadInt("version");
-	var history = packet.ReadByte("history size");
-	for (var i = 0; i < history; ++i)
+	if (dataLen > 0)
 	{
-		packet.ReadInt("achievementId");
-		packet.ReadLong("unlockTime");
+		packet.ReadInt("version");
+		var history = packet.ReadByte("history size");
+		for (var i = 0; i < history; ++i)
+		{
+			packet.ReadInt("achievementId");
+			packet.ReadLong("unlockTime");
+		}
+
+		var nbVariables = packet.ReadInt("nbVariables");
+		for (var i = 0; i < nbVariables; ++i)
+		{
+			packet.ReadInt("value id");
+			packet.ReadLong("value");
+		}
+
+		var nbAchievements = packet.ReadInt("nbAchievements");
+		for (var i = 0; i < nbAchievements; ++i)
+		{
+			packet.ReadInt("achievement id");
+			packet.ReadBool("active");
+			packet.ReadBool("complete");
+			packet.ReadLong("lastCompleted");
+			packet.ReadLong("startTime");
+		}
+
+		var nbObjectives = packet.ReadInt("nbObjectives");
+		for (var i = 0; i < nbObjectives; ++i)
+			packet.ReadInt("objective id");
+
+		var numFollowed = packet.ReadByte("numFollowed");
+		for (var i = 0; i < numFollowed; ++i)
+			packet.ReadInt("followedAchievement id");
 	}
-
-	var nbVariables = packet.ReadInt("nbVariables");
-	for (var i = 0; i < nbVariables; ++i)
-	{
-		packet.ReadInt("value id");
-		packet.ReadLong("value");
-	}
-
-	var nbAchievements = packet.ReadInt("nbAchievements");
-	for (var i = 0; i < nbAchievements; ++i)
-	{
-		packet.ReadInt("achievement id");
-		packet.ReadBool("active");
-		packet.ReadBool("complete");
-		packet.ReadLong("lastCompleted");
-		packet.ReadLong("startTime");
-	}
-
-	var nbObjectives = packet.ReadInt("nbObjectives");
-	for (var i = 0; i < nbObjectives; ++i)
-		packet.ReadInt("objective id");
-
-	var numFollowed = packet.ReadByte("numFollowed");
-	for (var i = 0; i < numFollowed; ++i)
-		packet.ReadInt("followedAchievement id");
 
 	// ACCOUNT_INFORMATION
 	var adminRights = packet.ReadShort("adminRights size");
@@ -790,16 +792,15 @@ packet.ReadLong("Skip some");
 		packet.ReadByte();
 
 	// Second part of packet
-	var protoBuildSize = packet.ReadInt("protoBuildSize");
-	for (var y = 0; y < protoBuildSize; ++y)
-		packet.ReadByte("protoBuild" + y);
+	//var protoBuildSize = packet.ReadInt("protoBuildSize");
+
+	//for (var y = 0; y < protoBuildSize; ++y)
+	//	packet.ReadByte("protoBuild" + y);
 
 	// Third part of packet
-	var protoBuildSize2 = packet.ReadInt("protoBuildSize2");
-	for (var y = 0; y < protoBuildSize2; ++y)
-		packet.ReadByte("protoBuild2" + y);
-
-	packet.Log(packet.Length());
+	//var protoBuildSize2 = packet.ReadInt("protoBuildSize2");
+	//for (var y = 0; y < protoBuildSize2; ++y)
+	//	packet.ReadByte("protoBuild2" + y);
 }
 
 ReadPacket();

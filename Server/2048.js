@@ -65,8 +65,6 @@ function ReadPacket()
 
 		packet.ReadShort("InstanceId");
 	}
-
-	packet.Log(packet.Length());
 }
 
 ReadPacket();
