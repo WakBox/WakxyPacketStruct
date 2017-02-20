@@ -60,9 +60,8 @@ function ReadPacket()
 		packet.ReadByte("Type");
 		var invSize = packet.ReadShort("Content");
 
-		if (invSize > 0)
+		for (var x = 0; x < invSize; ++x)
 		{
-
 			packet.ReadShort("Position");
 			packet.ReadByte("Type");
 			packet.ReadLong("TargetUniqueId");
