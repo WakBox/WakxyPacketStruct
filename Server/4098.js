@@ -790,16 +790,14 @@ packet.ReadLong("Skip some");
 	for (var z=0; z < dungeonSize; ++z)
 		packet.ReadByte();
 
+
 	// Second part of packet
-	//var protoBuildSize = packet.ReadInt("protoBuildSize");
+	var protoBuildSize = packet.ReadInt("buildSheet.proto size");
 
-	//for (var y = 0; y < protoBuildSize; ++y)
-	//	packet.ReadByte("protoBuild" + y);
+	packet.DumpBlob("buildSheet", protoBuildSize);
 
-	// Third part of packet
-	//var protoBuildSize2 = packet.ReadInt("protoBuildSize2");
-	//for (var y = 0; y < protoBuildSize2; ++y)
-	//	packet.ReadByte("protoBuild2" + y);
+	var protoBuildSize = packet.ReadInt("aptitude.proto size");
+	packet.DumpBlob("aptitude");
 }
 
 ReadPacket();

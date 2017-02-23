@@ -1,6 +1,6 @@
 function ReadPacket()
 {
-	packet.ReadInt("size");
+	packet.ReadInt("Protobuf size");
 }
 
 ReadPacket();
