@@ -122,7 +122,7 @@ function ReadPacket()
 	packet.ReadByte("needSpellRestat");
 	packet.ReadByte("needSpellAutoRestat");
 
-	// OK UNTIL HERE
+	// OK UNTIL HERE - 1.50.2
 
 	// INVENTORIES - TODO FIX ME
 
@@ -479,6 +479,9 @@ packet.ReadLong("Skip some");
 		packet.ReadByte("rights");
 	}
 
+	var dbProtoSize = packet.ReadShort("Size of dimensionalBag.proto");
+	packet.DumpBlob("dimensionalBag", dbProtoSize);
+
 	// CHALLENGES
 	if (packet.ReadByte("hasCurrentScenarii") == 1)
 	{
@@ -787,8 +790,7 @@ packet.ReadLong("Skip some");
 
     // DUNGEON_PROGRESSION
     var dungeonSize = packet.ReadShort("Dungeon progress data size");
-	for (var z=0; z < dungeonSize; ++z)
-		packet.ReadByte();
+	packet.DumpBlob("dungeon", dungeonSize);
 
 
 	// Second part of packet
