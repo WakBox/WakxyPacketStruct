@@ -33,7 +33,7 @@ function ReadPacket()
 			packet.ReadLong("unkLong");
 		}
 
-		for (var i = 0; i < 100; ++i)
+		for (var i = 0; i < 101; ++i)
 			packet.ReadInt("m_adminRights[" + i + "]");
 
 		packet.ReadString("m_accountNickName");
