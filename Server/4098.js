@@ -22,6 +22,12 @@ function ReadPacket()
 	// BREED
 	packet.ReadShort("Breed");
 
+	// GUILD_BLAZON
+	packet.ReadLong("guildBlazon");
+
+	// GUILD_ID
+	packet.ReadLong("guildId");
+
 	// HP
 	packet.ReadInt("HP");
 
