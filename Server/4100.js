@@ -30,10 +30,9 @@ function ReadPacket()
 	packet.ReadShort("serializedProtectorInfos");
 	packet.ReadShort("nbProtectorsInfos");
 
-	// New
-	var unkSize = packet.ReadShort("unk size");
-	for (var i = 0; i < unkSize; ++i)
-		packet.ReadByte("unk byte");
+	// Dungeon.proto Protobuf
+	var protoBuildSize = packet.ReadShort("dungeon.proto size");
+	packet.DumpBlob("dungeon", protoBuildSize);
 }
 
 ReadPacket();
