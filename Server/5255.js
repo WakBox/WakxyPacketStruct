@@ -1,6 +1,7 @@
 function ReadPacket()
 {
-	packet.ReadInt("Protobuf size");
+	var protoSize = packet.ReadInt("ProtoEquipmentAccount size");
+    packet.DumpBlob("equipment_set", protoSize);
 }
 
 ReadPacket();
