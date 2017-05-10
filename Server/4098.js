@@ -133,23 +133,22 @@ function ReadPacket()
 	// INVENTORIES - TODO FIX ME
 
 	// questInventory
-	for (var i = 0; i < packet.ReadShort("questInventory size"); ++i)
+	var questInvSize = packet.ReadShort("questInventory size");
+	for (var i = 0; i < questInvSize; ++i)
 	{
 		packet.ReadInt("refId");
 		packet.ReadShort("quantity");
 	}
 
 	// temporaryInventory
-	for (var i = 0; i < packet.ReadShort("temporaryInventory size ?"); ++i)
+	var tempInvSize = packet.ReadShort("temporaryInventory size ?");
+	for (var i = 0; i < tempInvSize; ++i)
 	{
 		packet.Log("========= Equipment " + i + " =========");
 		packet.ReadShort("Position");
 		packet.ReadLong("uid");
 		packet.ReadInt("refid");
 		packet.ReadShort("quantity");
-		
-		if (packet.ReadByte("hasTimestamp") == 1)
-			packet.ReadLong("timestampValue");
 
 		if (packet.ReadByte("haspet") == 1)
 		{
@@ -175,7 +174,8 @@ function ReadPacket()
 
 		if (packet.ReadByte("hasgems"))
 		{
-			for (var j = 0; j < packet.ReadShort("Gems size"); ++j)
+			var gemsSize = packet.ReadShort("Gems size");
+			for (var j = 0; j < gemsSize; ++j)
 			{
 				packet.ReadByte("position");
 				packet.ReadInt("referenceId");
