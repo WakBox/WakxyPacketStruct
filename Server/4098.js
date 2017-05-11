@@ -128,11 +128,7 @@ function ReadPacket()
 	packet.ReadByte("needSpellRestat");
 	packet.ReadByte("needSpellAutoRestat");
 
-	// OK UNTIL HERE - 1.50.2
-
-	// INVENTORIES - TODO FIX ME
-
-	// questInventory
+	// RawQuestItemInventory
 	var questInvSize = packet.ReadShort("questInventory size");
 	for (var i = 0; i < questInvSize; ++i)
 	{
@@ -140,80 +136,30 @@ function ReadPacket()
 		packet.ReadShort("quantity");
 	}
 
-	// temporaryInventory
+	// RawInventoryItemInventory
 	var tempInvSize = packet.ReadShort("temporaryInventory size ?");
 	for (var i = 0; i < tempInvSize; ++i)
 	{
-		packet.Log("========= Equipment " + i + " =========");
-		packet.ReadShort("Position");
-		packet.ReadLong("uid");
-		packet.ReadInt("refid");
-		packet.ReadShort("quantity");
-
-		if (packet.ReadByte("haspet") == 1)
-		{
-			packet.ReadInt("definitionId");
-			packet.ReadBigString("name");
-			packet.ReadInt("colorItemRefId");
-			packet.ReadInt("equippedRefItemId");
-			packet.ReadInt("health");
-			packet.ReadInt("xp");
-			packet.ReadByte("fightCounter");
-			packet.ReadLong("fightCounterStartDate");
-			packet.ReadLong("lastMealDate");
-			packet.ReadLong("lastHungryDate");
-			packet.ReadInt("sleepRefItemId");
-			packet.ReadLong("sleepDate");
-		}
-	
-		if (packet.ReadByte("hasxp") == 1)
-		{
-			packet.ReadInt("definitionId");
-			packet.ReadLong("xp");
-		}
-
-		if (packet.ReadByte("hasgems"))
-		{
-			var gemsSize = packet.ReadShort("Gems size");
-			for (var j = 0; j < gemsSize; ++j)
-			{
-				packet.ReadByte("position");
-				packet.ReadInt("referenceId");
-			}
-		}
-
-		if (packet.ReadByte("hasRentInfo") == 1)
-		{
-			packet.ReadInt("type");
-			packet.ReadLong("duration");
-			packet.ReadLong("count");
-		}
-
-		if (packet.ReadByte("hasCompanionInfo") == 1)
-		{
-			packet.ReadLong("xp");
-		}
-
-		if (packet.ReadByte("hasBind") == 1)
-		{
-			packet.ReadByte("type");
-			packet.ReadLong("data");
-		}
+		ReadInventory(packet, i);
 	}
 
-	// cosmeticsInventory
-	for (var i = 0; i < packet.ReadShort("cosmeticsInventory items size"); ++i)
+	// RawCosmeticsItemInventory
+	var cosmeInvSize = packet.ReadShort("cosmeticsInventory items size");
+	for (var i = 0; i < cosmeInvSize; ++i)
 	{
 		packet.ReadInt("refId");
+		packet.ReadByte("bindId");
 	}
+	packet.ReadInt("activeRefId");
 	
-	// petCosmeticsInventory
-	for (var i = 0; i < packet.ReadShort("petCosmeticsInventory items size"); ++i)
+	// RawCosmeticsItemInventory
+	var petCosmeInvSize = packet.ReadShort("petCosmeticsInventory items size");
+	for (var i = 0; i < petCosmeInvSize; ++i)
 	{
 		packet.ReadInt("refId");
+		packet.ReadByte("bindId");
 	}
-
-packet.ReadLong("Skip some");
+	packet.ReadInt("activeRefId");
 
 	// BAGS - TODO FIX ME
 	var bagCount = packet.ReadShort("Bags count");
@@ -221,84 +167,21 @@ packet.ReadLong("Skip some");
 	for (var i = 0; i < bagCount; ++i)
 	{
 		packet.Log("========= Bag " + i + " =========");
-		packet.ReadLong("uid");
-		packet.ReadInt("refid");
+		packet.ReadLong("uniqueId");
+		packet.ReadInt("referenceId");
 		packet.ReadByte("position");
-		packet.ReadShort("maxsize");
+		packet.ReadShort("maximumSize");
 
 		var itemCount = packet.ReadShort("item count");
 
 		for (var j = 0; j < itemCount; ++j)
-		{
-			packet.ReadShort("Position");
-
-			packet.ReadLong("uid");
-			packet.ReadInt("refid");
-
-			if (packet.ReadByte("haspet") == 1)
-			{
-			packet.ReadInt("definitionId");
-			packet.ReadBigString("name");
-			packet.ReadInt("colorItemRefId");
-			packet.ReadInt("equippedRefItemId");
-			packet.ReadInt("health");
-			packet.ReadInt("xp");
-			packet.ReadByte("fightCounter");
-			packet.ReadLong("fightCounterStartDate");
-			packet.ReadLong("lastMealDate");
-			packet.ReadLong("lastHungryDate");
-			packet.ReadInt("sleepRefItemId");
-			packet.ReadLong("sleepDate");
-			}
-	
-			if (packet.ReadByte("hasxp") == 1)
-			{
-				packet.ReadInt("definitionId");
-				packet.ReadLong("xp");
-			}
-
-			if (packet.ReadByte("hasgems"))
-			{
-				for (var j = 0; j < packet.ReadShort("Gems size"); ++j)
-				{
-					packet.ReadByte("position");
-					packet.ReadInt("referenceId");
-				}
-			}
-
-			if (packet.ReadByte("hasRentInfo") == 1)
-			{
-				packet.ReadInt("type");
-				packet.ReadLong("duration");
-				packet.ReadLong("count");
-			}
-
-			if (packet.ReadByte("hasCompanionInfo") == 1)
-			{
-				packet.ReadLong("xp");
-			}
-
-			if (packet.ReadByte("hasBind") == 1)
-			{
-				packet.ReadByte("type");
-				packet.ReadLong("data");
-			}
-
-			if (packet.ReadByte("elements") == 1)
-			{
-				// TODO
-			}
-
-			if (packet.ReadByte("mimiSymbic") == 1)
-			{
-				// TODO
-			}
+		{			
+			ReadInventory(packet, j);
 		}
 	}
 
-        // PROTO_TEMPORARY_INVENTORY - TODO FIX ME
-        packet.ReadShort("PROTO_TEMPORARY_INVENTORY Size to read");
-
+    // PROTO_TEMPORARY_INVENTORY - TODO FIX ME
+    packet.ReadShort("PROTO_TEMPORARY_INVENTORY Size to read");
 
 	// BREED_SPECIFIC - TODO FIX ME
 	if (packet.ReadByte("hasOsaSpecific") == 1)
@@ -798,7 +681,6 @@ packet.ReadLong("Skip some");
     var dungeonSize = packet.ReadShort("Dungeon progress data size");
 	packet.DumpBlob("dungeon", dungeonSize);
 
-
 	// Second part of packet
 	var protoBuildSize = packet.ReadInt("buildSheet.proto size");
 
@@ -806,6 +688,84 @@ packet.ReadLong("Skip some");
 
 	var protoBuildSize = packet.ReadInt("aptitude.proto size");
 	packet.DumpBlob("aptitude");
+}
+
+function ReadInventory(packet, pos)
+{
+	packet.Log("========= Equipment " + pos + " =========");
+	packet.ReadShort("Position");
+
+	// RawInventoryItem
+	packet.ReadLong("uniqueId");
+	packet.ReadInt("refId");
+	packet.ReadShort("quantity");
+
+	if (packet.ReadByte("haspet") == 1)
+	{
+		packet.ReadInt("definitionId");
+		packet.ReadBigString("name");
+		packet.ReadInt("colorItemRefId");
+		packet.ReadInt("equippedRefItemId");
+		packet.ReadInt("health");
+		packet.ReadInt("xp");
+		packet.ReadLong("lastMealDate");
+		packet.ReadLong("lastHungryDate");
+		packet.ReadInt("sleepRefItemId");
+		packet.ReadLong("sleepDate");
+	}
+
+	if (packet.ReadByte("hasxp"))
+	{
+		packet.ReadInt("definitionId");
+		packet.ReadLong("xp");
+	}
+
+	if (packet.ReadByte("hasgems"))
+	{
+		var gemsSize = packet.ReadShort("Gems size");
+		for (var j = 0; j < gemsSize; ++j)
+		{
+			packet.ReadByte("position");
+			packet.ReadInt("referenceId");
+		}
+	}
+
+	if (packet.ReadByte("hasRentInfo"))
+	{
+		packet.ReadInt("type");
+		packet.ReadLong("duration");
+		packet.ReadLong("count");
+	}
+
+	if (packet.ReadByte("hasCompanionInfo"))
+	{
+		packet.ReadLong("xp");
+	}
+
+	if (packet.ReadByte("hasBind") == 1)
+	{
+		packet.ReadByte("type");
+		packet.ReadBool("applied");
+	}
+
+	if (packet.ReadByte("hasElements") == 1)
+	{
+		packet.ReadByte("damageElements");
+		packet.ReadByte("resistanceElements");
+	}
+
+	if (packet.ReadByte("hasMergedItems") == 1)
+	{
+		packet.ReadInt("version");
+		var mergedItemSize = packet.ReadShort("items size");
+		for (var j = 0; j < mergedItemSize; ++j)
+			packet.ReadByte();
+	}
+
+	if (packet.ReadByte("hasMimiSymbic"))
+	{
+		packet.ReadInt("skinItemRefId");
+	}
 }
 
 ReadPacket();
