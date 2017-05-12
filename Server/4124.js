@@ -1,7 +1,10 @@
 function ReadPacket()
 {
-	packet.ReadInt("??");
-	packet.ReadInt("??");
+	packet.Log("CharacterHealthUpdateMessage");
+
+	packet.ReadLong("characterId");
+	packet.ReadInt("health");
+	packet.ReadInt("healthRegen");
 }
 
 ReadPacket();

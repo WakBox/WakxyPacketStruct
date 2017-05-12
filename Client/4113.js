@@ -4,7 +4,7 @@ function ReadPacket()
 	packet.ReadInt("From Position Y");
 	packet.ReadShort("From Position Z");
 
-	var StepSize = packet.ReadByte("Step count");
+	var StepSize = packet.ReadByte("Steps size");
 
 	for (var i = 0; i < StepSize; ++i)
 	{
