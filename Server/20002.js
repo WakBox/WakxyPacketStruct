@@ -12,7 +12,10 @@ function ReadPacket()
 	packet.ReadLong("Jobs");
 	packet.ReadLong("Votedate");
 	packet.ReadByte("Government Opinion");
-	packet.ReadByte("IsCandidate");
+	packet.ReadBool("IsCandidate");
+	packet.ReadByte("pvpState");
+	packet.ReadLong("pvpDate");
+	packet.ReadByte("pvpRank");
 
 	// GUILD_LOCAL_INFO
 	var gSize = packet.ReadShort("guild size");
