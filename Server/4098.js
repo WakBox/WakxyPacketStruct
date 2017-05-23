@@ -507,7 +507,11 @@ function ReadPacket()
 
 	var onSize = packet.ReadShort("offendedNationsSize");
 	for (var i = 0; i < onSize; ++i)
+    {
 		packet.ReadInt("offendedNationId");
+        packet.ReadInt("lawPoints");
+        packet.ReadLong("date");
+    }
 
 	// PASSEPORT_INFO
 	packet.ReadByte("isPassportActive");

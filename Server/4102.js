@@ -222,6 +222,8 @@ var ocSize = packet.ReadShort("offendedNations size");
 	for (var i = 0; i < ocSize; ++i)
 	{
 		packet.ReadInt("offendedNationId");
+        packet.ReadInt("lawPoints");
+        packet.ReadLong("date");
 	}
 
 // GUILD_REMOTE_INFO
