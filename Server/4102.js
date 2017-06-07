@@ -2,7 +2,7 @@ function ReadPacket()
 {
 	packet.Log("ActorSpawnMessage");
 
-	packet.ReadBool("myFightSpawn (0 = SpawnInWorld, 1= SpawnInMyFight)");
+	var inFight = packet.ReadBool("myFightSpawn (0 = SpawnInWorld, 1= SpawnInMyFight)");
 	var number = packet.ReadByte("charactersCount");
 
 	for (var j = 0; j < number; ++j)
@@ -459,9 +459,12 @@ for (var i = 0; i < unavailableActions; ++i)
 packet.ReadLong("controllerId");
 packet.ReadLong("companionId");
 
-			packet.WriteSQL("creatures",
-			"guid, breed, level, position_x, position_y, position_z, direction, instance_id, group_id",
-			guid+","+breed+","+level+","+position_x+","+position_y+","+position_z+","+direction+","+instance_id+","+group_id);
+			if (!inFight)
+			{
+				packet.WriteSQL("creatures",
+				"guid, breed, level, position_x, position_y, position_z, direction, instance_id, group_id",
+				guid+","+breed+","+level+","+position_x+","+position_y+","+position_z+","+direction+","+instance_id+","+group_id);
+			}
 		}		
 		else
 			packet.Skip(k);
