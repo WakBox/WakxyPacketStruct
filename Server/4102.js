@@ -287,7 +287,7 @@ packet.ReadShort("downscaleLevel");
 			packet.ReadByte("CharacterSerializerPart");
 
 	// ID
-	packet.ReadLong("Char Id");
+	var guid = packet.ReadLong("Char Id");
 
 	// IDENTITY
 	packet.ReadByte("idType");
@@ -297,14 +297,14 @@ packet.ReadShort("downscaleLevel");
 	packet.ReadBigString("Name");
 
 	// BREED
-	packet.ReadShort("Breed");
+	var breed = packet.ReadShort("Breed");
 
 // POSITION
-	packet.ReadInt("X");
-	packet.ReadInt("Y");
-	packet.ReadShort("Z");
-	packet.ReadShort("InstanceId");
-	packet.ReadByte("Direction");
+	var position_x = packet.ReadInt("X");
+	var position_y = packet.ReadInt("Y");
+	var position_z = packet.ReadShort("Z");
+	var instance_id = packet.ReadShort("InstanceId");
+	var direction = packet.ReadByte("Direction");
 	var hasDimBagPosition = packet.ReadByte("dimBagPosition");
 	if (hasDimBagPosition)
 	{
@@ -318,7 +318,7 @@ packet.ReadShort("downscaleLevel");
 	packet.ReadBool("show");
 
 // PUBLIC_CHARACTERISTICS
-packet.ReadShort("level");
+var level = packet.ReadShort("level");
 var charSize = packet.ReadShort("size");
 packet.Skip(charSize);
 
@@ -438,7 +438,7 @@ if (packet.ReadByte("hasCurrentPath"))
 	}
 
             // GROUP
-packet.ReadLong("partyId");
+var group_id = packet.ReadLong("partyId");
 var members = packet.ReadShort("members");
 for (var i = 0; i < members; ++i)
 {
@@ -459,7 +459,9 @@ for (var i = 0; i < unavailableActions; ++i)
 packet.ReadLong("controllerId");
 packet.ReadLong("companionId");
 
-
+			packet.WriteSQL("creatures",
+			"guid, breed, level, position_x, position_y, position_z, direction, instance_id, group_id",
+			guid+","+breed+","+level+","+position_x+","+position_y+","+position_z+","+direction+","+instance_id+","+group_id);
 		}		
 		else
 			packet.Skip(k);
