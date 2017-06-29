@@ -585,8 +585,6 @@ function ReadPacket()
 		packet.ReadInt("adminRight");
 
 	packet.ReadInt("subscriptionLevel");
-	packet.ReadInt("heroesSubscriptionLevel");
-	packet.ReadInt("m_freeHeroesSubscriptionLevel");
 	packet.ReadInt("forcedSubscriptionLevel");
 	packet.ReadInt("antiAddictionLevel");
 	packet.ReadLong("sessionStartTime");

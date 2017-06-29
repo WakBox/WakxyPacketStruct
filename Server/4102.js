@@ -261,7 +261,6 @@ packet.ReadInt("subscriptionLevel");
 var rightsSize = packet.ReadShort("additionalRightsSize");
 for (var a = 0; a < rightsSize; ++a)
 	packet.ReadInt("additionalRights");
-packet.ReadInt("heroesSubscriptionLevel");
 packet.ReadShort("characterMaxLevel");
 packet.ReadLong("betaReward");
 
