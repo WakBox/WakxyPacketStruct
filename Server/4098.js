@@ -545,7 +545,7 @@ function ReadPacket()
 	var dataLen = packet.ReadShort("serializedAchievementsContextLength");
 	if (dataLen > 0)
 	{
-		packet.ReadInt("version");
+		var version = packet.ReadInt("version");
 		var history = packet.ReadByte("history size");
 		for (var i = 0; i < history; ++i)
 		{
@@ -566,8 +566,20 @@ function ReadPacket()
 			packet.ReadInt("achievement id");
 			packet.ReadBool("active");
 			packet.ReadBool("complete");
-			packet.ReadLong("lastCompleted");
-			packet.ReadLong("startTime");
+
+			var i2 = 1;
+			var i3 = 1;
+			if (version >=  4)
+			{
+				i2 = packet.ReadByte("unk");
+				i3 = packet.ReadByte("unk2");
+			}
+
+			if (((version >= 1) && (version < 4)) || ((version >= 4) && (i2 != 0)))
+				packet.ReadLong("lastCompleted");
+
+			if (((version >= 2) && (version < 4)) || ((version >= 4) && (i3 != 0)))
+				packet.ReadLong("startTime");
 		}
 
 		var nbObjectives = packet.ReadInt("nbObjectives");
